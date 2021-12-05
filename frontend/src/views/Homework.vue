@@ -7,7 +7,7 @@
     <p>Late submissions are not accepted.</p>
     <p>Email submissions are not accepted.</p>
     <hr>
-    <homework-box></homework-box>
+    <homework-box v-bind:admin=false></homework-box>
   </div>
 </template>
 

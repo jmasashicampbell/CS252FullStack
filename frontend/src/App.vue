@@ -15,6 +15,7 @@
             <!--<router-link to="/notes" class="nav-item nav-link" v-bind:class="{ 'active': $route.path === '/notes' }">Class Notes</router-link>-->
             <router-link to="/homework" class="nav-item nav-link" v-bind:class="{ 'active': $route.path === '/homework' }">Homework</router-link>
             <!--<router-link to="/ta" class="nav-item nav-link" v-bind:class="{ 'active': $route.path === '/ta' }">TA Schedule</router-link>-->
+            <router-link to="/admin" class="nav-item nav-link" v-bind:class="{ 'active': $route.path === '/admin' }">Admin</router-link>
           </div>
         </div>
       </nav>
@@ -105,6 +106,12 @@ h3 {
 h4 {
   font-weight: bold;
   font-size: 1rem;
+}
+
+button {
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
 }
 
 @media only screen and (min-device-width: 641px) and (min-width: 641px){

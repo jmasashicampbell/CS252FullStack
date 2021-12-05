@@ -2,7 +2,7 @@
   <blue-box class="homework-box">
     <table>
       <tr>
-        <th>
+        <th v-if="!admin">
           <input
               type="checkbox"
               :checked="assignments.every(x => x.completed)"
@@ -13,9 +13,19 @@
         <th>Ch.</th>
         <th>Exercises</th>
         <th>Due</th>
+        <th v-if="admin">Show</th>
+        <th v-if="admin">
+          <button
+            type="button"
+            class="button"
+            @click="showEditModal"
+          >
+            &#10133;
+          </button>
+        </th>
       </tr>
       <tr v-for="assignment in assignments" :key="assignment.num">
-        <td>
+        <td v-if="!admin">
           <input
               type="checkbox"
               :checked="assignment.completed"
@@ -23,38 +33,65 @@
           />
         </td>
         <td :class="{completed: assignment.completed}">{{ assignment.assignmentNum }}</td>
-        <td :class="{completed: assignment.completed}">{{ assignment.chapter }}</td>
+        <td :class="{completed: assignment.completed}">{{ assignment.chapterNum }}</td>
         <td :class="{completed: assignment.completed}" v-html="assignment.exercises"></td>
         <td :class="{completed: assignment.completed}"><strong>{{ assignment.dueDate }}</strong></td>
+        <td v-if="admin">
+          <span v-if="assignment.show">&check;</span>
+        </td>
+        <td v-if="admin">
+          <button
+              type="button"
+              class="button"
+              @click="showEditModal(assignment)"
+          >
+            Edit
+          </button>
+        </td>
       </tr>
-      <tr><td colspan=5>More will be posted later.</td></tr>
+      <tr v-if="!admin"><td colspan=5>More will be posted later.</td></tr>
     </table>
   </blue-box>
 </template>
 
 <script>
-import homeworkData from "../homework-data";
+import axios from 'axios';
 import BlueBox from "./blue-box";
+
 export default {
   name: "homework-box",
   components: {BlueBox},
   data() {
     return {
-      homeworkData,
+      homeworkData: [],
       completed: JSON.parse(localStorage.getItem("completedAssignments") || "[]"),
-    }
+    };
   },
   computed: {
     assignments() {
-      let assignArr = [];
-      for (let assignment of homeworkData) {
-        assignment.completed = this.completed.includes(assignment.id);
-        assignArr.push(assignment);
-      }
-      return assignArr;
+      return this.homeworkData.map(assignment => {
+          assignment.completed = !this.admin && this.completed.includes(assignment.id);
+          return assignment;
+        }
+      )
     },
   },
+  props: ["admin"],
+  created() {
+    this.getHomework();
+  },
   methods: {
+    async getHomework() {
+      try {
+        const url = this.admin ? "/api/homework/all" : "/api/homework";
+        const response = await axios.get(url);
+        console.log(response.data);
+        this.homeworkData = response.data;
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     updateCompleted(event, id) {
       if (event.target.checked) {
         this.completed.push(id);
@@ -68,11 +105,14 @@ export default {
     },
     updateAllCompleted(event) {
       if (event.target.checked) {
-        this.completed = homeworkData.map(x => x.id);
+        this.completed = this.homeworkData.map(x => x.id);
       } else {
         this.completed = [];
       }
       localStorage.setItem("completedAssignments", JSON.stringify(this.completed));
+    },
+    showEditModal(assignment) {
+      this.$emit('show', assignment);
     }
   }
 }
@@ -94,11 +134,15 @@ export default {
   padding: 0.5rem;
 }
 
-
 .completed {
   text-decoration: line-through;
   color: var(--light-gray);
 }
+
+button {
+  width: 3rem;
+}
+
 
 @media only screen and (min-device-width: 641px) and (min-width: 641px) {
   .homework-box table {

@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 const upload = multer({
-    dest: '../front-end/public/images/',
+    dest: '../frontend/public/images/',
     limits: {
         fileSize: 10000000
     }
@@ -48,6 +48,18 @@ app.post('/api/homework', async (req, res) => {
 });
 
 app.get('/api/homework', async (req, res) => {
+    try {
+        const homeworks = await Homework.find({
+            show: true
+        });
+        res.send(homeworks);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.get('/api/homework/all', async (req, res) => {
     try {
         const homeworks = await Homework.find();
         res.send(homeworks);
