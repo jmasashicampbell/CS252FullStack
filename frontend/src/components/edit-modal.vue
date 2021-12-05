@@ -82,21 +82,20 @@ export default {
 
 <style scoped>
 .modal-backdrop {
-  position: fixed;
-  top: 0;
-  bottom: 0;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
   left: 0;
-  right: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
   background-color: rgba(128, 128, 128, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .modal {
   height: fit-content;
   width: fit-content;
-  margin: auto;
+  margin-top: 10rem;
+  margin-left: calc(50% - 10rem);
   background: #FFFFFF;
   box-shadow: 2px 2px 20px 1px;
   overflow-x: auto;
@@ -132,6 +131,8 @@ export default {
   background-color: var(--dark-blue);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: fit-content;
 }
 
 .btn-close {
