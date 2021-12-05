@@ -29,7 +29,7 @@
           <input
               type="checkbox"
               :checked="assignment.completed"
-              @change="updateCompleted($event, assignment.id)"
+              @change="updateCompleted($event, assignment._id)"
           />
         </td>
         <td :class="{completed: assignment.completed}">{{ assignment.assignmentNum }}</td>
@@ -70,7 +70,7 @@ export default {
   computed: {
     assignments() {
       return this.homeworkData.map(assignment => {
-          assignment.completed = !this.admin && this.completed.includes(assignment.id);
+          assignment.completed = !this.admin && this.completed.includes(assignment._id);
           return assignment;
         }
       )
@@ -105,7 +105,7 @@ export default {
     },
     updateAllCompleted(event) {
       if (event.target.checked) {
-        this.completed = this.homeworkData.map(x => x.id);
+        this.completed = this.homeworkData.map(x => x._id);
       } else {
         this.completed = [];
       }
